@@ -10,26 +10,37 @@ let productos = [{
 
 // Rutas utilizados para estr proyecto
 router.get("/productos", (req, res) => {
+  console.log(Object.keys(req.io.engine.clients))
+  req.io.emit('mensaje', { my: 'estan en formulario de productos' })
+  return res.send({ success: true });
+
   // res.render("productos.hbs",{productos:productos})
   // res.render('productos.ejs', {
   //      productos
   // })
-  res.render("pages/productos.pug",{productos:productos})
+  // res.render("pages/productos.pug",{productos:productos})
 })
 
-router.get("/", (req, res) => {
-  //res.render("formulario.hbs")
-  res.render("index.pug")
-  //res.render("index.ejs")
-})
-router.post("/productos", (req, res) => {
+// router.get("/", (req, res) => {
+
+
+//   res.render("formulario.hbs")
+//   // res.render("index.pug")
+//   //res.render("index.ejs")
+// })
+router.post("/", (req, res) => {
   let newProducto = req.body
+  console.log(newProducto)
   newProducto.id = productos.length > 0 ? productos[productos.length - 1].id + 1 : 0
   productos.push(newProducto)
+
+  req.io.emit('productos', productos)
+  return res.send({ success: true });
   //pug
-  res.render("index.pug")
+  // res.render("index.pug")
 
   //hbs
+
   // res.render("formulario.hbs")
 
   // ejs
